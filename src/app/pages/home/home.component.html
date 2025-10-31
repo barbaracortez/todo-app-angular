@@ -1,0 +1,64 @@
+<section class="todoapp">
+  <header class="header">
+    <div class="container">
+      <h2>Mi app de Angular</h2>
+      <p>Mi lista de tareas</p>
+      <p>¡Tu puedes! ¡¡Vamos por ese trabajo!!</p>
+      <input
+        class="new-todo"
+        placeholder="Type new todo"
+        autofocus
+        type="text"
+        [formControl]="newTaskCtrl"
+        (keydown.enter)="changeHandler()"
+      />
+    </div>
+  </header>
+  <div class="container todoapp-wrapper">
+    <section class="main" *ngIf="tasks().length > 0">
+      <ul class="todo-list">
+        <li
+            *ngFor="let task of taskByFilter() ; index as i"
+            [class.completed]="task.completed"
+            [class.editing]="task.editing"
+            (dblclick)="updateTaskEditingMode(i)"
+>
+
+          <div class="view">
+            <input class="toggle" type="checkbox" [checked]="task.completed" (change)="updateTask(i)" />
+            <label>{{ task.title }}</label>
+            <button class="destroy" (click)="deleteTask(i)"></button>
+          </div>
+
+          <input
+            class="edit"
+            [value]="task.title"
+            (keydown.enter)="updateTaskText(i, $event)"
+          />
+        </li>
+      </ul>
+    </section>
+
+    <footer class="footer" *ngIf="taskByFilter().length > 0" >
+      <span class="todo-count">
+        <strong>{{ taskByFilter().length }}</strong>
+        <span *ngIf="taskByFilter().length === 1; else elseBlock">item</span>
+        <ng-template #elseBlock>items</ng-template>
+      </span>
+
+      <ul class="filters">
+        <li>
+          <a (click)="changeFilter('all')" [class.selected]="filter() === 'all'">All</a>
+        </li>
+        <li>
+          <a (click)="changeFilter('pending')"  [class.selected]="filter() === 'pending'">Pending</a>
+        </li>
+        <li>
+          <a (click)="changeFilter('completed')"  [class.selected]="filter() === 'completed'">Completed</a>
+        </li>
+      </ul>
+
+      <button class="clear-completed">Clear completed</button>
+    </footer>
+  </div>
+</section>
